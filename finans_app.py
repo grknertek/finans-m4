@@ -9,11 +9,9 @@ st.set_page_config(page_title="M4 Finans (Bulut)", page_icon="☁️", layout="w
 st.title("💸 Bulut Finans Paneli")
 
 # --- GOOGLE SHEETS BAĞLANTISI ---
-# Bağlantıyı kuruyoruz
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-# Veriyi Google'dan Oku (Cache süresi 0 olsun ki anlık görelim)
-# Linki buraya ekliyoruz ki robot nereye gideceğini bilsin
+# 1. Veriyi Oku (LİNKİ BURAYA YAPIŞTIR)
 data = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/1amikQ6-ohbwhiDTC-7Z2PflWQUOHjw9EHJ0rJ_hkscI/edit?gid=0#gid=0", worksheet="Sayfa1", ttl=0)
 df = pd.DataFrame(data)
 
@@ -40,12 +38,11 @@ with st.sidebar.form("harcama_formu", clear_on_submit=True):
         # Eski veriyle birleştir
         guncel_df = pd.concat([df, yeni_veri], ignore_index=True)
         
-        # Google Sheets'e Geri Yaz
-        # Linki buraya da ekliyoruz ki robot nereye yazacağını bilsin
-conn.update(spreadsheet="https://docs.google.com/spreadsheets/d/1amikQ6-ohbwhiDTC-7Z2PflWQUOHjw9EHJ0rJ_hkscI/edit?gid=0#gid=0", worksheet="Sayfa1", data=guncel_df)
+        # 2. Veriyi Yaz (LİNKİ BURAYA DA YAPIŞTIR)
+        conn.update(spreadsheet="https://docs.google.com/spreadsheets/d/1amikQ6-ohbwhiDTC-7Z2PflWQUOHjw9EHJ0rJ_hkscI/edit?gid=0#gid=0", worksheet="Sayfa1", data=guncel_df)
         
         st.sidebar.success("✅ Buluta Kaydedildi!")
-        # Sayfayı yenilemek için (manuel çözüm)
+        # Sayfayı yenile
         st.rerun()
 
 # --- ANA EKRAN (RAPORLAR) ---
@@ -57,7 +54,6 @@ if not df.empty:
     col1, col2, col3 = st.columns(3)
     toplam_harcama = df["Tutar"].sum()
     
-    # En çok harcanan kategori (Hata vermemesi için kontrol)
     if not df.empty:
         en_cok_harcanan = df.groupby("Kategori")["Tutar"].sum().idxmax()
     else:
