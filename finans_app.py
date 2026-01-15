@@ -13,7 +13,8 @@ st.title("💸 Bulut Finans Paneli")
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 # Veriyi Google'dan Oku (Cache süresi 0 olsun ki anlık görelim)
-data = conn.read(worksheet="Sayfa1", ttl=0)
+# Linki buraya ekliyoruz ki robot nereye gideceğini bilsin
+data = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/1amikQ6-ohbwhiDTC-7Z2PflWQUOHjw9EHJ0rJ_hkscI/edit?gid=0#gid=0", worksheet="Sayfa1", ttl=0)
 df = pd.DataFrame(data)
 
 # --- YAN MENÜ (VERİ GİRİŞİ) ---
